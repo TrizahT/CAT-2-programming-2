@@ -1,0 +1,225 @@
+Obituary Management Platform - Project Documentation
+1. Introduction
+The Obituary Management Platform is a web-based system that allows users to submit and view obituaries. The project follows a structured development approach using Django as the backend framework and MySQL as the database.
+
+
+        "The obituary_form.html file contains Django template tags such as {% csrf_token %} and {% if messages %},       which will only function correctly when used within a Django project. To render it properly, run the Django server and access it via http://127.0.0.1:8000/obituary_form/."
+
+
+2. Project Setup
+2.1. Prerequisites
+Before starting, ensure the following are installed on your system:
+
+Python (Version 3.10 or higher)
+
+Django
+
+MySQL
+
+pip (Python package manager)
+
+2.2. Creating the Virtual Environment
+sh
+Copy
+Edit
+python -m venv venv
+Activate it:
+
+Windows: venv\Scripts\activate
+
+Mac/Linux: source venv/bin/activate
+
+2.3. Installing Dependencies
+sh
+Copy
+Edit
+pip install django mysqlclient
+3. Database Setup
+3.1. Creating the Database
+Run the following SQL script to create the database and table:
+
+sql
+Copy
+Edit
+CREATE DATABASE obituary_platform;
+
+USE obituary_platform;
+
+CREATE TABLE obituaries (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    dob DATE NOT NULL,
+    dod DATE NOT NULL,
+    content TEXT NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+4. Development Process
+4.1. Creating the Django Project and App
+Navigate to your working directory and create a Django project:
+
+sh
+Copy
+Edit
+django-admin startproject obituaryy
+cd obituaryy
+Create the Django app:
+
+sh
+Copy
+Edit
+python manage.py startapp obituary_app
+4.2. Defining the Obituary Model (models.py)
+Inside obituary_app/models.py:
+
+python
+Copy
+Edit
+from django.db import models
+
+class Obituary(models.Model):
+    name = models.CharField(max_length=255)
+    dob = models.DateField()
+    dod = models.DateField()
+    content = models.TextField()
+    author = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+Run migrations:
+
+sh
+Copy
+Edit
+python manage.py makemigrations obituary_app
+python manage.py migrate
+5. Application Implementation
+5.1. Creating the HTML Form (obituary_form.html)
+html
+Copy
+Edit
+<form method="post" action="{% url 'submit_obituary' %}">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Full Name" required>
+    <input type="date" name="dob" required>
+    <input type="date" name="dod" required>
+    <textarea name="content" placeholder="Obituary Content" required></textarea>
+    <input type="text" name="author" placeholder="Author Name" required>
+    <button type="submit">Submit</button>
+</form>
+5.2. Handling Form Submission (submit_obituary.py)
+python
+Copy
+Edit
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Obituary
+
+def submit_obituary(request):
+    if request.method == "POST":
+        name = request.POST['name']
+        dob = request.POST['dob']
+        dod = request.POST['dod']
+        content = request.POST['content']
+        author = request.POST['author']
+
+        try:
+            obituary = Obituary(name=name, dob=dob, dod=dod, content=content, author=author)
+            obituary.save()
+            messages.success(request, "Obituary submitted successfully!")
+        except Exception as e:
+            messages.error(request, f"Error: {e}")
+
+        return redirect('obituary_form')
+
+    return render(request, "obituary_form.html")
+5.3. Viewing Obituaries (view_obituaries.py)
+python
+Copy
+Edit
+from django.shortcuts import render
+from .models import Obituary
+
+def view_obituaries(request):
+    obituaries = Obituary.objects.all()
+    return render(request, "view_obituaries.html", {"obituaries": obituaries})
+5.4. Configuring URLs (urls.py)
+In obituary_app/urls.py:
+
+python
+Copy
+Edit
+from django.urls import path
+from .submit_obituary import submit_obituary
+from .view_obituaries import view_obituaries
+
+urlpatterns = [
+    path('submit/', submit_obituary, name='submit_obituary'),
+    path('view/', view_obituaries, name='view_obituaries'),
+]
+Include this in obituaryy/urls.py:
+
+python
+Copy
+Edit
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('obituary_app.urls')),
+]
+6. Testing & Deployment
+6.1. Running the Server
+sh
+Copy
+Edit
+python manage.py runserver
+Open http://127.0.0.1:8000/submit/ to submit obituaries.
+Open http://127.0.0.1:8000/view/ to view submitted obituaries.
+
+6.2. Checking the Database
+Run:
+
+sh
+Copy
+Edit
+python manage.py dbshell
+Then:
+
+sql
+Copy
+Edit
+SELECT * FROM obituaries;
+7. Usage Guide
+7.1. Submitting an Obituary
+Navigate to http://127.0.0.1:8000/submit/
+
+Fill in the form
+
+Click "Submit"
+
+A success message will appear
+
+7.2. Viewing Obituaries
+Navigate to http://127.0.0.1:8000/view/
+
+A list of submitted obituaries will be displayed
+
+8. Conclusion
+This project successfully implements a simple obituary management system using Django and MySQL. The application allows users to submit obituaries and view them dynamically from the database.
+
+9. SEO and Social Media Optimization 
+To improve search engine visibility and social media sharing, the following steps were considered but not required for submission:
+
+Meta Tags: Dynamically generating title, description, and keywords based on the obituary content.
+
+Semantic HTML & Structured Data: Using <article>, <section>, and schema.org markup for better indexing.
+
+Open Graph Tags: Adding <meta property="og:title"> and <meta property="og:description"> for social media previews.
+
+Social Media Sharing: Implementing Facebook, Twitter, and LinkedIn share buttons.
+
+Canonical Tags: Using <link rel="canonical" href="..."> to prevent duplicate content issues.
+
