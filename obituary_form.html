@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit an Obituary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Submit an Obituary</h2>
+        <form id="obituaryForm" action="{% url 'submit_obituary' %}" method="POST">
+            {% csrf_token %}
+            
+            <label for="name">Name of Deceased:</label>
+            <input type="text" id="name" name="name" required>
+            <span class="error" id="nameError">Name is required.</span>
+
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+            <span class="error" id="dobError">Date of birth is required.</span>
+
+            <label for="dod">Date of Death:</label>
+            <input type="date" id="dod" name="dod" required>
+            <span class="error" id="dodError">Date of death is required.</span>
+
+            <label for="content">Obituary Content:</label>
+            <textarea id="content" name="content" rows="4" required></textarea>
+            <span class="error" id="contentError">Obituary content is required.</span>
+
+            <label for="author">Author Name:</label>
+            <input type="text" id="author" name="author" required>
+            <span class="error" id="authorError">Author name is required.</span>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("obituaryForm").addEventListener("submit", function(event) {
+            let isValid = true;
+
+            let name = document.getElementById("name").value.trim();
+            let dob = document.getElementById("dob").value;
+            let dod = document.getElementById("dod").value;
+            let content = document.getElementById("content").value.trim();
+            let author = document.getElementById("author").value.trim();
+
+            document.getElementById("nameError").style.display = name ? "none" : "block";
+            document.getElementById("dobError").style.display = dob ? "none" : "block";
+            document.getElementById("dodError").style.display = dod ? "none" : "block";
+            document.getElementById("contentError").style.display = content ? "none" : "block";
+            document.getElementById("authorError").style.display = author ? "none" : "block";
+
+            if (!name || !dob || !dod || !content || !author) {
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();  
+            }
+        });
+    </script>
+
+</body>
+</html>
