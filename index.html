@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Sign Up & Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            width: 300px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #signupBtn {
+            background-color: green;
+            color: white;
+        }
+        #loginBtn {
+            background-color: blue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Student Sign Up</h2>
+        <form id="signupForm">
+            <input type="email" id="signupEmail" placeholder="Enter Email">
+            <p class="error" id="signupEmailError"></p>
+
+            <input type="password" id="signupPassword" placeholder="Enter Password">
+            <p class="error" id="signupPasswordError"></p>
+
+            <button type="submit" id="signupBtn">Sign Up</button>
+        </form>
+    </div>
+
+    <br>
+
+    <div class="container">
+        <h2>Student Login</h2>
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Enter Email">
+            <p class="error" id="loginEmailError"></p>
+
+            <input type="password" id="loginPassword" placeholder="Enter Password">
+            <p class="error" id="loginPasswordError"></p>
+
+            <button type="submit" id="loginBtn">Login</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("signupForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let email = document.getElementById("signupEmail").value.trim();
+            let password = document.getElementById("signupPassword").value.trim();
+            let emailError = document.getElementById("signupEmailError");
+            let passwordError = document.getElementById("signupPasswordError");
+
+            emailError.innerText = "";
+            passwordError.innerText = "";
+
+            let valid = true;
+
+            // Email validation
+            let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                emailError.innerText = "Invalid email format!";
+                valid = false;
+            }
+
+            // Password validation (at least 6 characters)
+            if (password.length < 6) {
+                passwordError.innerText = "Password must be at least 6 characters!";
+                valid = false;
+            }
+
+            if (valid) {
+                alert("Signup successful!");
+            }
+        });
+
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let email = document.getElementById("loginEmail").value.trim();
+            let password = document.getElementById("loginPassword").value.trim();
+            let emailError = document.getElementById("loginEmailError");
+            let passwordError = document.getElementById("loginPasswordError");
+
+            emailError.innerText = "";
+            passwordError.innerText = "";
+
+            let valid = true;
+
+            // Email validation
+            let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                emailError.innerText = "Invalid email format!";
+                valid = false;
+            }
+
+            // Password validation (at least 6 characters)
+            if (password.length < 6) {
+                passwordError.innerText = "Password must be at least 6 characters!";
+                valid = false;
+            }
+
+            if (valid) {
+                alert("Login successful!");
+            }
+        });
+    </script>
+
+</body>
+</html>
